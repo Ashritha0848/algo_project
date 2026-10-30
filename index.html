@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Marks Management</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #eef2f7;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .container {
+            background: white;
+            width: 80%;
+            margin: auto;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px gray;
+        }
+
+        h1 {
+            color: #1e3a8a;
+        }
+
+        input {
+            padding: 10px;
+            margin: 8px;
+            border: 1px solid gray;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 8px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1e40af;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 25px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #2563eb;
+            color: white;
+        }
+
+        .delete {
+            background: #dc2626;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Student Marks Management System</h1>
+
+    <h3>Add Student Details</h3>
+
+    <input type="text" id="name"
+           placeholder="Enter Student Name">
+
+    <input type="number" id="marks"
+           placeholder="Enter Marks" min="0" max="100">
+
+    <br>
+
+    <button onclick="addStudent()">Add Student</button>
+
+    <button onclick="bubbleSort()">Sort by Marks</button>
+
+    <button onclick="resetData()">Reset</button>
+
+    <h3>Student Records</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Student Name</th>
+                <th>Marks</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody id="studentTable">
+        </tbody>
+    </table>
+
+    <h3 id="message"></h3>
+
+</div>
+
+<script>
+
+let students = [];
+
+function addStudent() {
+
+    let name = document.getElementById("name").value;
+    let marks = document.getElementById("marks").value;
+
+    if (name.trim() === "" || marks === "") {
+        alert("Please enter all details");
+        return;
+    }
+
+    if (Number(marks) < 0 || Number(marks) > 100) {
+        alert("Marks must be between 0 and 100");
+        return;
+    }
+
+    students.push({
+        name: name,
+        marks: Number(marks)
+    });
+
+    displayStudents();
+
+    document.getElementById("name").value = "";
+    document.getElementById("marks").value = "";
+
+    document.getElementById("message").innerText =
+        "Student added successfully!";
+}
+
+
+function displayStudents() {
+
+    let table = document.getElementById("studentTable");
+
+    table.innerHTML = "";
+
+    for (let i = 0; i < students.length; i++) {
+
+        let row = `
+            <tr>
+                <td>${i + 1}</td>
+                <td>${students[i].name}</td>
+                <td>${students[i].marks}</td>
+                <td>
+                    <button class="delete"
+                    onclick="deleteStudent(${i})">
+                    Delete
+                    </button>
+                </td>
+            </tr>
+        `;
+
+        table.innerHTML += row;
+    }
+}
+
+
+// BUBBLE SORT ALGORITHM
+
+function bubbleSort() {
+
+    let n = students.length;
+
+    if (n === 0) {
+        alert("No student records to sort!");
+        return;
+    }
+
+    for (let i = 0; i < n - 1; i++) {
+
+        for (let j = 0; j < n - i - 1; j++) {
+
+            if (students[j].marks >
+                students[j + 1].marks) {
+
+                let temp = students[j];
+
+                students[j] = students[j + 1];
+
+                students[j + 1] = temp;
+            }
+        }
+    }
+
+    displayStudents();
+
+    document.getElementById("message").innerText =
+        "Students sorted successfully using Bubble Sort!";
+}
+
+
+// DELETE STUDENT
+
+function deleteStudent(index) {
+
+    students.splice(index, 1);
+
+    displayStudents();
+
+    document.getElementById("message").innerText =
+        "Student deleted successfully!";
+}
+
+
+// RESET ALL RECORDS
+
+function resetData() {
+
+    students = [];
+
+    displayStudents();
+
+    document.getElementById("message").innerText =
+        "All records cleared!";
+}
+
+</script>
+
+</body>
+</html>
